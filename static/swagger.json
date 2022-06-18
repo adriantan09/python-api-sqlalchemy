@@ -1,0 +1,241 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The backend Python Flask REST API documentation.",
+    "version": "1.0.0",
+    "title": "Python Flask REST API Server"
+  },
+  "schemes": [
+    "HTTP"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "components": {
+    "fields": {
+      "gameId": {
+        "type": "number",
+        "description": "ID of the game",
+        "example": 56513315
+      },
+      "gameName": {
+        "type": "string",
+        "description": "Name of the game",
+        "example": "Red Dead Redemption 2"
+      },
+      "gamePrice": {
+        "type": "number",
+        "description": "Price of the game",
+        "example": 76.6
+      },
+      "gamePublisher": {
+        "type": "string",
+        "description": "Publisher of the game",
+        "example": "Rockstar Games"
+      }
+    },
+    "objects": {
+      "game": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/fields/gameName"
+          },
+          "price": {
+            "$ref": "#/components/fields/gamePrice"
+          },
+          "publisher": {
+            "$ref": "#/components/fields/gamePublisher"
+          }
+        }
+      },
+      "gameWithId": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/fields/gameId"
+          },
+          "name": {
+            "$ref": "#/components/fields/gameName"
+          },
+          "price": {
+            "$ref": "#/components/fields/gamePrice"
+          },
+          "publisher": {
+            "$ref": "#/components/fields/gamePublisher"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "gameId": {
+        "$ref": "#/components/fields/gameId"
+      },
+      "gameIdQuery": {
+        "in": "path",
+        "name": "gameId",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "example": 312894,
+        "description": "ID of the game"
+      },
+      "gameNew": {
+        "in": "body",
+        "name": "gameBody",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/objects/game"
+        },
+        "description": "ID of the game"
+      }
+    },
+    "responses": {
+      "200": {
+        "empty": {
+          "description": "OK",
+          "schema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        "gamesGetAll": {
+          "description": "OK",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "games": {
+                "type": "array",
+                "description": "List of all games",
+                "items": {
+                  "$ref": "#/components/objects/gameWithId"
+                }
+              }
+            }
+          }
+        },
+        "gamesGetOne": {
+          "description": "OK",
+          "schema": {
+            "$ref": "#/components/objects/gameWithId"
+          }
+        },
+        "booleanGameSuccess": {
+          "description": "OK",
+          "schema": {
+            "type": "boolean",
+            "properties": true
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Input",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string",
+              "description": "Error message returned from server",
+              "example": "Invalid input"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Game Management",
+      "description": "Manage the data of games."
+    }
+  ],
+  "paths": {
+    "/games": {
+      "get": {
+        "summary": "Fetch a list of all games.",
+        "tags": ["Game Management"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/gamesGetAll"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      }
+    },
+    "/game": {
+      "post": {
+        "summary": "Publish a game",
+        "tags": ["Game Management"],
+        "parameters": [{
+          "$ref": "#/components/parameters/gameNew"
+        }],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/booleanGameSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      }
+    },
+    "/game/{gameId}": {
+      "get": {
+        "summary": "Get a game by id",
+        "tags": ["Game Management"],
+        "parameters": [{
+          "$ref": "#/components/parameters/gameIdQuery"
+        }],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/gamesGetOne"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      },
+      "put": {
+        "summary": "Edit a game by id",
+        "tags": ["Game Management"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/gameIdQuery"
+          },
+          {
+            "$ref": "#/components/parameters/gameNew"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/booleanGameSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a game by id",
+        "tags": ["Game Management"],
+        "parameters": [{
+          "$ref": "#/components/parameters/gameIdQuery"
+        }],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/booleanGameSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      }
+    }
+  }
+}
